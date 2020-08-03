@@ -1,0 +1,5 @@
+PORT=8080
+DB_USERNAME=yellapp
+DB_PASSWORD=<password>
+DB_DATABASE=yell_development
+DB_HOST=127.0.0.1
