@@ -1,15 +1,19 @@
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
+const cors = require('cors')
 
 const userRouter = require('./routes/user')
 const pinsRouter = require('./routes/pins')
 
+const app = express();
+
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(userRouter)
 app.use(pinsRouter)
+
 app.get('/', (req, res) => {
-    console.log('page got')
     res.send('did it')
 })
 
