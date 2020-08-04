@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   Pin.associate = function (models) {
     Pin.belongsTo(models.User, { foreignKey: 'ownerId' })
     Pin.hasMany(models.Message, { foreignKey: 'pinId', onDelete: 'CASCADE', hooks: true })
+    Pin.hasMany(models.UserPin, { foreignKey: 'pinId' })
   };
   return Pin;
 };
