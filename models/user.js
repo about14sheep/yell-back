@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.isValid = () => true;
 
   User.prototype.setPassword = function (password) {
+    this.accountStatus = 'p';
     this.hashedPassword = bcrypt.hashSync(password)
     return this;
   }

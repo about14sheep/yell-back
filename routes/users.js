@@ -29,7 +29,6 @@ router.post('/', email, password, username, asyncHandler(async (req, res, next) 
     const user = await UserUts.create(req.body);
     const { jti, token } = generateToken(user);
     user.tokenId = jti;
-    console.log(user)
     await user.save();
     res.json({ token, user: user.toSafeObject() });
 }))
