@@ -21,9 +21,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(25)
       },
-      password: {
+      hashedPassword: {
         allowNull: false,
-        type: Sequelize.STRING(100)
+        type: Sequelize.STRING(60).BINARY,
+      },
+      tokenId: {
+        type: Sequelize.STRING(36),
       },
       geoLoc: {
         type: Sequelize.GEOGRAPHY('POINT', 4326)
