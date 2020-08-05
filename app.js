@@ -52,10 +52,8 @@ server.listen(port, _ => console.log(`Listening on port ${port}`))
 const configureWSS = _ => {
     const wss = new Server({ noServer: true });
     wss.on('connection', (socket, request) => {
-        console.log(request.url)
         socket.on('message', message => {
             wss.clients.forEach(client => {
-                console.log(message)
                 client.send(message)
             })
         })
@@ -70,4 +68,4 @@ const configureWSS = _ => {
 
 //TODO: figure this websocket out brother
 
-//configureWSS();
+configureWSS();
