@@ -7,12 +7,11 @@ const UserUts = require('./user-utils');
 
 const generateToken = user => {
     const data = {
-        name: user.name,
+        username: user.username,
     };
     const jwtid = uuid();
-
     return {
-        jti: twtid,
+        jti: jwtid,
         token: jwt.sign({ data }, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn, jwtid })
     }
 }

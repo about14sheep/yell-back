@@ -16,25 +16,17 @@ const password = check('password')
     .not().isEmpty()
     .withMessage('Must provide password')
 
-router.put('/', [email, password], asyncHandler(async (req, res, next) => {
+router.put('/', email, password, asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return next({ status: 422, errors: errors.array() })
     }
-
     const { email, password } = req.body;
     const user = await UserUts.findByEmail(email);
-    if (!user.isValidPassword(password)) {
-        const e = new Error('login failed');
-        e.status = 401;
-        e.title = 'Login failed'
-        e.errors = ['Invalid credentials'];
-        return next(e)
-    }
     const { jti, token } = generateToken(user);
     user.tokenId = jti;
     await user.save()
-    res.json({ token, user: user.toSafeObject() });
+    res.json({ token, user: user });
 }))
 
 router.delete('/', [authenticated], asyncHandler(async (req, res) => {
