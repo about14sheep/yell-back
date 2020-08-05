@@ -11,25 +11,28 @@ const userpinRouter = require('./routes/userpins');
 
 const app = express();
 const server = http.createServer(app)
-const wss = new Server({
-    server,
-    path: '/pins/:id',
-    clientTracking: true,
-});
-wss.on('connection', socket => {
-    console.log('got client')
 
+const wss = new Server({ noServer: true });
+wss.on('connection', (socket, request) => {
+    console.log(request.url)
     socket.on('message', message => {
         wss.clients.forEach(client => {
+            console.log(message)
             client.send(message)
         })
     })
+})
+server.on('upgrade', function upgrade(req, socket, head) {
+    wss.handleUpgrade(req, socket, head, function done(ws) {
+        wss.emit('connection', ws, req)
+    })
+
 })
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(userRouter)
-app.use(pinsRouter)
+app.use('/pins', pinsRouter)
 app.use(userpinRouter)
 
 app.get('/', (req, res) => {

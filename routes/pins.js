@@ -4,8 +4,7 @@ const asyncHandler = require('./utils')
 
 const router = express.Router()
 
-router.get('/pins', asyncHandler(async (req, res) => {
-    console.log(req.params.gl)
+router.get('/', asyncHandler(async (req, res) => {
     const lat = 39.17211
     const lng = -76.894722
     const pins = await Pin.findAll({
@@ -15,9 +14,9 @@ router.get('/pins', asyncHandler(async (req, res) => {
     res.send(pins)
 }));
 
-router.get('/pins/:id', asyncHandler(async (req, res) => {
-    const pin = await Pin.findByPk(parseInt(req.params.id, 10))
-    res.send(pin)
-}))
+// router.get('/pins/:id', asyncHandler(async (req, res) => {
+//     const pin = await Pin.findByPk(parseInt(req.params.id, 10))
+//     res.send(pin)
+// }))
 
 module.exports = router;
