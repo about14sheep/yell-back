@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     username: DataTypes.STRING,
     tokenId: DataTypes.STRING,
-    hashedPassword: DataTypes.STRING,
+    hashedPassword: DataTypes.STRING.BINARY,
     geoLoc: DataTypes.GEOGRAPHY
   }, {});
   User.associate = function (models) {
@@ -17,16 +17,16 @@ module.exports = (sequelize, DataTypes) => {
   };
   User.prototype.isValid = () => true;
 
-  User.prototype.setPassword = password => {
+  User.prototype.setPassword = function (password) {
     this.hashedPassword = bcrypt.hashSync(password)
-    return this
+    return this;
   }
 
-  User.prototype.isValidPassword = password => {
-    return bcrypt.compareSync(password, this.hashedPassword.toString())
+  User.prototype.isValidPassword = function (password) {
+    return bcrypt.compareSync(password, this.hashedPassword.toString());
   }
 
-  User.prototype.toSafeObject = _ => {
+  User.prototype.toSafeObject = function () {
     return {
       createdAt: this.createdAt,
       email: this.email,

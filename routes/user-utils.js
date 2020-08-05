@@ -9,7 +9,7 @@ class NullUser {
 
 const create = async details => {
     const user = await User.build(details);
-    user.setPassword(details.password);
+    user.setPassword(details.password)
     return await user.save();
 }
 

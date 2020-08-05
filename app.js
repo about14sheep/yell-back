@@ -20,7 +20,7 @@ app.use(logger('dev'));
 app.use(express.json())
 
 app.use('/session', sessionRouter)
-app.use(userRouter)
+app.use('/users', userRouter)
 app.use('/pins', pinsRouter)
 app.use(userpinRouter)
 

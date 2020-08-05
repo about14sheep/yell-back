@@ -23,16 +23,15 @@ router.put('/', email, password, asyncHandler(async (req, res, next) => {
     }
     const { email, password } = req.body;
     const user = await UserUts.findByEmail(email);
-    // if (!user.isValidPassword(password)) {
-    //     const err = new Error('Login Failed')
-    //     err.status = 401;
-    //     err.title = 'Login failed';
-    //     err.errors = ['Invalid credentials'];
-    //     return next(err)
-    // }
+    if (!user.isValidPassword(password)) {
+        const err = new Error('Login Failed')
+        err.status = 401;
+        err.title = 'Login failed';
+        err.errors = ['Invalid credentials'];
+        return next(err)
+    }
     const { jti, token } = generateToken(user);
     user.tokenId = jti;
-    console.log(user);
     await user.save()
     res.json({ token, user: user.toSafeObject() });
 }))
