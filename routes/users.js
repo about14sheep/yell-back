@@ -29,14 +29,14 @@ router.post('/', email, password, username, asyncHandler(async (req, res, next) 
     const user = await UserUts.create(req.body);
     const { jti, token } = generateToken(user);
     user.tokenId = jti;
-    await player.save();
-    res.json({ token, player: player.toSafeObject() });
+    await user.save();
+    res.json({ token, user: user.toSafeObject() });
 }))
 
 router.get('/me', authenticated, (req, res) => {
     res.json({
-        email: req.player.email,
-        username: req.player.username
+        email: req.user.email,
+        username: req.user.username
     })
 })
 

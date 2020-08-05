@@ -5,9 +5,9 @@ const uuid = require('uuid').v4;
 const jwtConfig = { secret: 'thecoldsalad', expiresIn: '10h' }
 const UserUts = require('./user-utils');
 
-const generateToken = player => {
+const generateToken = user => {
     const data = {
-        name: player.name,
+        name: user.name,
     };
     const jwtid = uuid();
 

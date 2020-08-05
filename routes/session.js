@@ -31,7 +31,7 @@ router.put('/', [email, password], asyncHandler(async (req, res, next) => {
         e.errors = ['Invalid credentials'];
         return next(e)
     }
-    const { jti, token } = generateToken(player);
+    const { jti, token } = generateToken(user);
     user.tokenId = jti;
     await user.save()
     res.json({ token, user: user.toSafeObject() });
