@@ -9,6 +9,7 @@ const userRouter = require('./routes/users')
 const pinsRouter = require('./routes/pins')
 const userpinRouter = require('./routes/userpins');
 const sessionRouter = require('./routes/session');
+const msgRouter = require('./routes/messages')
 
 const app = express();
 const server = http.createServer(app)
@@ -19,9 +20,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(logger('dev'));
 app.use(express.json())
 
-app.use('/session', sessionRouter)
-app.use('/users', userRouter)
-app.use('/pins', pinsRouter)
+app.use('/session', sessionRouter);
+app.use('/users', userRouter);
+app.use('/pins', pinsRouter);
+app.use('/messages', msgRouter);
 app.use(userpinRouter)
 
 app.use((_req, _res, next) => {
