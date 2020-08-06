@@ -19,17 +19,18 @@ router.post('/', title, geoLoc, asyncHandler(async (req, res, next) => {
     if (!errors.isEmpty()) {
         return next({ status: 422, errors: errors.array() });
     }
+    const { lat, lng } = req.body.geoLoc
     const pin = await Pin.build({
         title: req.body.title,
-        geoLoc: sequelize.literal(req.body.geoLoc),
+        geoLoc: sequelize.literal(`ST_MakePoint(${lat}, ${lng})`),
         ownerId: parseInt(req.body.ownerId, 10),
     })
     await pin.save();
 }))
 
 router.get('/', asyncHandler(async (req, res) => {
-    const lat = 39.17211
-    const lng = -76.894722
+    const lat = parseFloat(req.query.lat)
+    const lng = parseFloat(req.query.lng)
     const pins = await Pin.findAll({
         where: sequelize.fn('ST_DWithin', sequelize.col('geoLoc'), sequelize.literal('ST_MakePoint(' + lat + ', ' + lng + ')'), 8046)
     })
