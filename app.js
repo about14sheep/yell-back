@@ -1,9 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Server } = require('ws');
+const WebSocket = require('ws');
 const http = require('http');
-const logger = require('morgan')
+const logger = require('morgan');
 const cors = require('cors');
+
+const app = express();
+const server = http.createServer(app)
 
 const userRouter = require('./routes/users')
 const pinsRouter = require('./routes/pins')
@@ -11,8 +14,8 @@ const userpinRouter = require('./routes/userpins');
 const sessionRouter = require('./routes/session');
 const msgRouter = require('./routes/messages')
 
-const app = express();
-const server = http.createServer(app)
+const wss = new WebSocket.Server({ noServer: true });
+const clients = new Map()
 
 
 app.use(cors({ origin: "http://localhost:3000" }));
@@ -24,7 +27,7 @@ app.use('/session', sessionRouter);
 app.use('/users', userRouter);
 app.use('/pins', pinsRouter);
 app.use('/messages', msgRouter);
-app.use(userpinRouter)
+app.use('/userpins', userpinRouter)
 
 app.use((_req, _res, next) => {
     next(createError(404))
@@ -51,13 +54,25 @@ server.listen(port, _ => console.log(`Listening on port ${port}`))
 
 
 
-const configureWSS = _ => {
-    const wss = new Server({ noServer: true });
+const configureWSS = async _ => {
     wss.on('connection', (socket, request) => {
-        socket.on('message', message => {
-            wss.clients.forEach(client => {
-                client.send(message)
-            })
+        socket.on('message', async message => {
+            const msg = JSON.parse(message)
+            if (msg.type === 'SEND_USERS') {
+                clients.set(socket, msg.data.pinId)
+            }
+            if (msg.type === 'chatMessage') {
+                wss.clients.forEach(client => {
+                    if (clients.get(client) === msg.data.pinId) {
+                        client.send(message)
+                    }
+                })
+
+            }
+
+        })
+        socket.on('close', async _ => {
+            clients.delete(socket)
         })
     })
     server.on('upgrade', function upgrade(req, socket, head) {
@@ -67,7 +82,5 @@ const configureWSS = _ => {
 
     })
 }
-
-//TODO: figure this websocket out brother
 
 configureWSS();
