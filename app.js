@@ -51,9 +51,6 @@ app.get('/', (req, res) => {
 const port = parseInt(process.env.PORT, 10) || 8080;
 server.listen(port, _ => console.log(`Listening on port ${port}`))
 
-
-
-
 const configureWSS = async _ => {
     wss.on('connection', (socket, request) => {
         socket.on('message', async message => {
@@ -67,9 +64,7 @@ const configureWSS = async _ => {
                         client.send(message)
                     }
                 })
-
             }
-
         })
         socket.on('close', async _ => {
             clients.delete(socket)
@@ -79,7 +74,6 @@ const configureWSS = async _ => {
         wss.handleUpgrade(req, socket, head, function done(ws) {
             wss.emit('connection', ws, req)
         })
-
     })
 }
 
