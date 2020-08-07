@@ -1,7 +1,7 @@
 const express = require('express')
 const { check, validationResult } = require('express-validator');
 
-const { Pin, sequelize } = require('../models');
+const { Pin, sequelize, Message, User } = require('../models');
 const asyncHandler = require('./utils')
 
 const router = express.Router()
