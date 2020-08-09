@@ -13,7 +13,7 @@ const pinsRouter = require('./routes/pins')
 const userpinRouter = require('./routes/userpins');
 const sessionRouter = require('./routes/session');
 const msgRouter = require('./routes/messages')
-
+const { Message } = require('./models')
 const wss = new WebSocket.Server({ noServer: true });
 const clients = new Map()
 
