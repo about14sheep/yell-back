@@ -32,14 +32,23 @@ router.get('/', asyncHandler(async (req, res) => {
     const lat = parseFloat(req.query.lat)
     const lng = parseFloat(req.query.lng)
     const pins = await Pin.findAll({
-        where: sequelize.fn('ST_DWithin', sequelize.col('geoLoc'), sequelize.literal('ST_MakePoint(' + lat + ', ' + lng + ')'), 8046)
+        where: sequelize.fn('ST_DWithin', sequelize.col('geoLoc'), sequelize.literal(`ST_MakePoint(${lat}, ${lng})`), 8046)
     })
     res.send(pins)
 }));
 
-router.get('/:id', asyncHandler(async (req, res) => {
-    const pin = await Pin.findByPk(parseInt(req.params.id, 10))
-    res.send(pin)
+router.get('/check', asyncHandler(async (req, res) => {
+    const lat = parseFloat(req.query.lat)
+    const lng = parseFloat(req.query.lng)
+    try {
+        const pin = await Pin.findOne({
+            where: sequelize.fn('ST_DWithin', sequelize.col('geoLoc'), sequelize.literal(`ST_MakePoint(${lat}, ${lng})`), 10)
+        })
+        res.send(pin)
+
+    } catch (e) {
+        console.log(e)
+    }
 }))
 
 module.exports = router;

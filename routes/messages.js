@@ -1,5 +1,6 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
+const { Op } = require('sequelize')
 
 const { authenticated } = require('./security-utils');
 const asyncHandler = require('./utils');
@@ -25,8 +26,16 @@ router.post('/pins/:id', msgText, asyncHandler(async (req, res, next) => {
 }))
 
 router.get('/pins/:id', asyncHandler(async (req, res) => {
-    const pinMsgs = await Message.findAll({ where: { pinId: parseInt(req.params.id, 10) }, include: { model: User } })
-    res.send(pinMsgs)
+    const time = new Date()
+    const timeFrame = time.getHours() - 2
+    const timeLimit = timeFrame < 0 ? 23 - timeFrame : timeFrame
+    try {
+        const pinMsgs = await Message.findAll({ where: { pinId: parseInt(req.params.id, 10), createdAt: { [Op.gt]: timeLimit } }, include: { model: User } })
+        res.send(pinMsgs)
+
+    } catch (e) {
+        console.log(e)
+    }
 }))
 
 
