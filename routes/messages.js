@@ -27,7 +27,7 @@ router.post('/pins/:id', msgText, asyncHandler(async (req, res, next) => {
 
 router.get('/pins/:id', asyncHandler(async (req, res) => {
     const time = new Date()
-    const timeFrame = time.getHours() - 2
+    const timeFrame = time.getHours() - 1
     const timeLimit = timeFrame < 0 ? 23 - timeFrame : timeFrame
     try {
         const pinMsgs = await Message.findAll({ where: { pinId: parseInt(req.params.id, 10), createdAt: { [Op.gt]: timeLimit } }, include: { model: User } })
